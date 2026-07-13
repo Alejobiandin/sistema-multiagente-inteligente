@@ -117,7 +117,7 @@ export type InsertDNAOrganizational = typeof dnaOrganizational.$inferInsert;
 export const agentExecutions = mysqlTable("agent_executions", {
   id: int("id").autoincrement().primaryKey(),
   caseId: int("case_id").notNull(),
-  agentType: mysqlEnum("agent_type", ["NORMATIVE_INTERPRETER", "PRE_LIQUIDATOR", "AUDITOR", "COMMUNICATOR"]).notNull(),
+  agentType: mysqlEnum("agent_type", ["NORMATIVE_INTERPRETER", "PRE_LIQUIDATOR", "AUDITOR", "COMMUNICATOR", "DISMISSAL", "INDEMNIFICATION", "SOCIAL_CHARGES", "VALIDATOR", "MONITOR"]).notNull(),
   stage: mysqlEnum("stage", ["COLLECTION", "ANALYSIS", "PRE_LIQUIDATION", "AUDIT", "APPROVAL", "EMISSION", "PRESENTATION", "CLOSED"]),
   input: json("input"),
   output: json("output"),
@@ -206,6 +206,149 @@ export const notifications = mysqlTable("notifications", {
 
 export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = typeof notifications.$inferInsert;
+
+// ============================================
+// PAYROLL PROCESSING TABLES
+// ============================================
+
+/**
+ * Cargas de nóminas: registro de archivos subidos para procesamiento
+ */
+export const payrollUploads = mysqlTable("payroll_uploads", {
+  id: int("id").autoincrement().primaryKey(),
+  clientId: int("client_id").notNull(),
+  clientName: varchar("client_name", { length: 255 }).notNull(),
+  filename: varchar("filename", { length: 255 }).notNull(),
+  fileKey: varchar("file_key", { length: 500 }).notNull(),
+  fileType: mysqlEnum("file_type", ["CSV", "EXCEL", "JSON"]).notNull(),
+  payrollPeriod: varchar("payroll_period", { length: 20 }).notNull(),
+  employeeCount: int("employee_count"),
+  status: mysqlEnum("status", ["UPLOADED", "VALIDATING", "PROCESSING", "COMPLETED", "FAILED"]).default("UPLOADED"),
+  totalRecords: int("total_records"),
+  successfulRecords: int("successful_records").default(0),
+  failedRecords: int("failed_records").default(0),
+  errorDetails: json("error_details"),
+  uploadedBy: int("uploaded_by"),
+  uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+});
+
+export type PayrollUpload = typeof payrollUploads.$inferSelect;
+export type InsertPayrollUpload = typeof payrollUploads.$inferInsert;
+
+/**
+ * Despidos: registro de terminaciones de contrato
+ */
+export const dismissals = mysqlTable("dismissals", {
+  id: int("id").autoincrement().primaryKey(),
+  clientId: int("client_id").notNull(),
+  employeeId: varchar("employee_id", { length: 100 }).notNull(),
+  employeeName: varchar("employee_name", { length: 255 }).notNull(),
+  dismissalDate: varchar("dismissal_date", { length: 10 }).notNull(), // YYYY-MM-DD
+  dismissalReason: mysqlEnum("dismissal_reason", ["WITHOUT_CAUSE", "WITH_CAUSE", "RESIGNATION", "RETIREMENT", "DEATH", "FORCE_MAJEURE", "OTHER"]).notNull(),
+  noticeGiven: boolean("notice_given").default(true),
+  noticeStartDate: varchar("notice_start_date", { length: 10 }), // YYYY-MM-DD
+  noticeEndDate: varchar("notice_end_date", { length: 10 }), // YYYY-MM-DD
+  lastSalary: decimal("last_salary", { precision: 15, scale: 2 }),
+  workingDaysInMonth: int("working_days_in_month"),
+  status: mysqlEnum("status", ["DRAFT", "PROCESSING", "COMPLETED", "ERROR"]).default("DRAFT"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Dismissal = typeof dismissals.$inferSelect;
+export type InsertDismissal = typeof dismissals.$inferInsert;
+
+/**
+ * Indemnizaciones: cálculos de compensación por despido
+ */
+export const indemnifications = mysqlTable("indemnifications", {
+  id: int("id").autoincrement().primaryKey(),
+  dismissalId: int("dismissal_id").notNull(),
+  clientId: int("client_id").notNull(),
+  employeeId: varchar("employee_id", { length: 100 }).notNull(),
+  yearsOfService: decimal("years_of_service", { precision: 5, scale: 2 }),
+  bestMonthSalary: decimal("best_month_salary", { precision: 15, scale: 2 }),
+  indemnityAmount: decimal("indemnity_amount", { precision: 15, scale: 2 }),
+  vacationDays: int("vacation_days"),
+  vacationAmount: decimal("vacation_amount", { precision: 15, scale: 2 }),
+  sacAmount: decimal("sac_amount", { precision: 15, scale: 2 }),
+  integrationMonth: decimal("integration_month", { precision: 15, scale: 2 }),
+  totalAmount: decimal("total_amount", { precision: 15, scale: 2 }),
+  status: mysqlEnum("status", ["DRAFT", "CALCULATED", "APPROVED", "PAID", "ERROR"]).default("DRAFT"),
+  calculatedAt: timestamp("calculated_at"),
+  approvedAt: timestamp("approved_at"),
+  paidAt: timestamp("paid_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Indemnification = typeof indemnifications.$inferSelect;
+export type InsertIndemnification = typeof indemnifications.$inferInsert;
+
+/**
+ * Cargas sociales: aportes patronales, retenciones, seguros, fondos
+ */
+export const socialCharges = mysqlTable("social_charges", {
+  id: int("id").autoincrement().primaryKey(),
+  payrollUploadId: int("payroll_upload_id"),
+  clientId: int("client_id").notNull(),
+  payrollPeriod: varchar("payroll_period", { length: 20 }).notNull(),
+  chargeType: mysqlEnum("charge_type", ["EMPLOYER_CONTRIBUTION", "WITHHOLDING", "INSURANCE", "FUND", "OTHER"]).notNull(),
+  chargeDescription: varchar("charge_description", { length: 255 }).notNull(),
+  chargeCode: varchar("charge_code", { length: 50 }),
+  percentage: decimal("percentage", { precision: 5, scale: 2 }),
+  baseAmount: decimal("base_amount", { precision: 15, scale: 2 }),
+  chargeAmount: decimal("charge_amount", { precision: 15, scale: 2 }),
+  status: mysqlEnum("status", ["PENDING", "CALCULATED", "DECLARED", "PAID"]).default("PENDING"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SocialCharge = typeof socialCharges.$inferSelect;
+export type InsertSocialCharge = typeof socialCharges.$inferInsert;
+
+/**
+ * Cola de procesamiento: gestión de tareas concurrentes
+ */
+export const processingQueue = mysqlTable("processing_queue", {
+  id: int("id").autoincrement().primaryKey(),
+  payrollUploadId: int("payroll_upload_id"),
+  taskType: mysqlEnum("task_type", ["VALIDATE", "LIQUIDATE", "CALCULATE_CHARGES", "GENERATE_REPORT", "EXPORT"]).notNull(),
+  priority: mysqlEnum("priority", ["LOW", "MEDIUM", "HIGH", "CRITICAL"]).default("MEDIUM"),
+  status: mysqlEnum("status", ["PENDING", "PROCESSING", "COMPLETED", "FAILED", "RETRY"]).default("PENDING"),
+  retryCount: int("retry_count").default(0),
+  maxRetries: int("max_retries").default(3),
+  payload: json("payload"),
+  result: json("result"),
+  errorMessage: text("error_message"),
+  startedAt: timestamp("started_at"),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProcessingQueue = typeof processingQueue.$inferSelect;
+export type InsertProcessingQueue = typeof processingQueue.$inferInsert;
+
+/**
+ * Estado de procesamiento: seguimiento en tiempo real
+ */
+export const processingStatus = mysqlTable("processing_status", {
+  id: int("id").autoincrement().primaryKey(),
+  payrollUploadId: int("payroll_upload_id").notNull(),
+  totalTasks: int("total_tasks"),
+  completedTasks: int("completed_tasks").default(0),
+  failedTasks: int("failed_tasks").default(0),
+  progressPercentage: decimal("progress_percentage", { precision: 5, scale: 2 }).default("0"),
+  currentStage: varchar("current_stage", { length: 100 }),
+  estimatedTimeRemaining: int("estimated_time_remaining"), // segundos
+  tasksPerSecond: decimal("tasks_per_second", { precision: 10, scale: 2 }),
+  lastUpdate: timestamp("last_update").defaultNow().onUpdateNow(),
+});
+
+export type ProcessingStatus = typeof processingStatus.$inferSelect;
+export type InsertProcessingStatus = typeof processingStatus.$inferInsert;
 
 // ============================================
 // RELATIONS
