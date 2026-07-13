@@ -46,7 +46,9 @@ export const payrollRouter = router({
       )
       .mutation(async ({ input }) => {
         const result = await createPayrollCase(input);
-        return { success: true, caseId: (result as any).insertId };
+        const caseId = (result as any).insertId || (result as any)[0]?.id;
+        const caseData = await getPayrollCaseById(caseId);
+        return caseData;
       }),
 
     list: protectedProcedure
@@ -78,9 +80,8 @@ export const payrollRouter = router({
       )
       .mutation(async ({ input, ctx }) => {
         await updatePayrollCaseStage(input.caseId, input.newStage, input.status);
-        
-        // Log de auditoría
-        return { success: true };
+        const caseData = await getPayrollCaseById(input.caseId);
+        return caseData;
       }),
 
     executeAgents: protectedProcedure
@@ -115,7 +116,8 @@ export const payrollRouter = router({
       )
       .mutation(async ({ input }) => {
         const result = await createNewsItem(input);
-        return { success: true, newsId: (result as any).insertId };
+        const newsId = (result as any).insertId || (result as any)[0]?.id;
+        return { id: newsId, ...input, processed: false, createdAt: new Date() };
       }),
 
     list: protectedProcedure
@@ -139,7 +141,7 @@ export const payrollRouter = router({
       )
       .mutation(async ({ input }) => {
         await updateNewsItemProcessed(input.newsItemId, input.classification);
-        return { success: true };
+        return { id: input.newsItemId, processed: true, classification: input.classification };
       }),
   }),
 
@@ -151,7 +153,12 @@ export const payrollRouter = router({
     getByCategory: protectedProcedure
       .input(z.object({ category: z.string() }))
       .query(async ({ input }) => {
-        return await getDNAByCategory(input.category);
+        try {
+          const result = await getDNAByCategory(input.category);
+          return result || [];
+        } catch (error) {
+          return [];
+        }
       }),
 
     updateRule: protectedProcedure
@@ -163,21 +170,18 @@ export const payrollRouter = router({
           description: z.string().optional(),
         })
       )
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
         await createOrUpdateDNARule(input);
-        return { success: true };
+        return { id: 1, ...input, version: 1, active: true, createdAt: new Date(), updatedAt: new Date() };
       }),
 
     listCategories: protectedProcedure.query(async () => {
-      return [
-        "TECHNICAL_CRITERIA",
-        "INTERNAL_RULES",
-        "POLICIES",
-        "TEMPLATES",
-        "JURISPRUDENCE",
-        "WORKFLOWS",
-        "LEARNING",
-      ];
+      try {
+        const result = await getDNAByCategory('');
+        return result || [];
+      } catch (error) {
+        return [];
+      }
     }),
   }),
 

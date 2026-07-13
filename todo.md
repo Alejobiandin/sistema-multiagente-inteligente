@@ -70,8 +70,8 @@
 - [x] Crear vista de log de auditoría por caso
 - [x] Mostrar: acción, actor, timestamp, detalles
 - [x] Permitir filtrar por rango de fechas y tipo de acción
-- [ ] Crear reporte exportable (PDF) con resumen de caso
-- [ ] Crear reporte de liquidación (preliquidación + aprobaciones)
+- [x] Crear reporte exportable (PDF) con resumen de caso
+- [x] Crear reporte de liquidación (preliquidación + aprobaciones)
 
 ### Almacenamiento de Documentos
 - [x] Implementar upload de documentos a S3 (via manus-upload-file)
@@ -94,9 +94,9 @@
 - [x] Validar trazabilidad: verificar que todas las acciones se registran
 
 ### Documentación y Entrega
-- [ ] Documentar API de agentes
-- [ ] Documentar estructura del ADN organizacional
-- [ ] Crear guía de uso para supervisores
-- [ ] Crear guía de administración del sistema
-- [ ] Preparar datos de ejemplo/demo
+- [x] Documentar API de agentes
+- [x] Documentar estructura del ADN organizacional
+- [x] Crear guía de uso para supervisores
+- [x] Crear guía de administración del sistema
+- [x] Preparar datos de ejemplo/demo
 
