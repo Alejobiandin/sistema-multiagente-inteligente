@@ -11,6 +11,10 @@ import CaseDetail from "./pages/CaseDetail";
 import NewsInbox from "./pages/NewsInbox";
 import HumanApprovals from "./pages/HumanApprovals";
 import OrganizationalDNA from "./pages/OrganizationalDNA";
+import PayrollUpload from "./pages/PayrollUpload";
+import PayrollMonitoring from "./pages/PayrollMonitoring";
+import PayrollHistory from "./pages/PayrollHistory";
+import PayrollAudit from "./pages/PayrollAudit";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -23,6 +27,10 @@ function Router() {
       <Route path={"/news"} component={NewsInbox} />
       <Route path={"/approvals"} component={HumanApprovals} />
       <Route path={"/dna"} component={OrganizationalDNA} />
+      <Route path={"/payroll/upload"} component={PayrollUpload} />
+      <Route path={"/payroll/monitoring"} component={PayrollMonitoring} />
+      <Route path={"/payroll/history"} component={PayrollHistory} />
+      <Route path={"/payroll/audit"} component={PayrollAudit} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
