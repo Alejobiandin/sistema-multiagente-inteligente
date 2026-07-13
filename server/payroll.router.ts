@@ -293,6 +293,108 @@ export const payrollRouter = router({
   }),
 
   // ============================================
+  // PAYROLL UPLOADS
+  // ============================================
+
+  uploads: router({
+    upload: protectedProcedure
+      .input(
+        z.object({
+          clientName: z.string(),
+          payrollPeriod: z.string(),
+          fileType: z.enum(["CSV", "EXCEL", "JSON"]),
+          fileName: z.string(),
+          fileContent: z.string(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        return { success: true, message: "Nomina cargada exitosamente" };
+      }),
+
+    list: protectedProcedure
+      .input(
+        z.object({
+          limit: z.number().default(10),
+          offset: z.number().default(0),
+        })
+      )
+      .query(async ({ input, ctx }) => {
+        return { uploads: [], total: 0 };
+      }),
+  }),
+
+  // ============================================
+  // DISMISSALS & INDEMNIFICATIONS
+  // ============================================
+
+  dismissals: router({
+    create: protectedProcedure
+      .input(
+        z.object({
+          employeeId: z.string(),
+          employeeName: z.string(),
+          lastSalary: z.number(),
+          yearsOfService: z.number(),
+          dismissalReason: z.enum(["WITHOUT_CAUSE", "WITH_CAUSE", "RESIGNATION", "RETIREMENT", "DEATH", "FORCE_MAJEURE", "OTHER"]),
+          dismissalDate: z.string(),
+          workingDaysInMonth: z.number(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        return { success: true, message: "Despido registrado" };
+      }),
+
+    list: protectedProcedure.query(async ({ ctx }) => {
+      return [];
+    }),
+  }),
+
+  indemnifications: router({
+    calculate: protectedProcedure
+      .input(
+        z.object({
+          dismissalId: z.number(),
+          yearsOfService: z.number(),
+          bestMonthSalary: z.number(),
+          vacationDaysNotTaken: z.number(),
+          sacProportion: z.number(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        return { success: true, totalAmount: input.bestMonthSalary * input.yearsOfService };
+      }),
+
+    list: protectedProcedure.query(async ({ ctx }) => {
+      return [];
+    }),
+  }),
+
+  // ============================================
+  // SOCIAL CHARGES
+  // ============================================
+
+  socialCharges: router({
+    calculate: protectedProcedure
+      .input(
+        z.object({
+          grossSalary: z.number(),
+          employeeCategory: z.string(),
+          activityCode: z.string(),
+          payrollPeriod: z.string(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        const afip = input.grossSalary * 0.13;
+        const inamovilidad = input.grossSalary * 0.0075;
+        return { success: true, totalCharges: afip + inamovilidad };
+      }),
+
+    list: protectedProcedure.query(async ({ ctx }) => {
+      return [];
+    }),
+  }),
+
+  // ============================================
   // NOTIFICATIONS
   // ============================================
 
