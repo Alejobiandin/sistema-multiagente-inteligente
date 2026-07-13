@@ -7,8 +7,10 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import CasesManagement from "./pages/CasesManagement";
+import CaseDetail from "./pages/CaseDetail";
 import NewsInbox from "./pages/NewsInbox";
 import HumanApprovals from "./pages/HumanApprovals";
+import OrganizationalDNA from "./pages/OrganizationalDNA";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -17,8 +19,10 @@ function Router() {
       <Route path={"\\"} component={Home} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/cases"} component={CasesManagement} />
+      <Route path="/cases/:id" component={CaseDetail} />
       <Route path={"/news"} component={NewsInbox} />
       <Route path={"/approvals"} component={HumanApprovals} />
+      <Route path={"/dna"} component={OrganizationalDNA} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

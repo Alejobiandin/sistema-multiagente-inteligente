@@ -1,7 +1,7 @@
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Zap, BarChart3, Users, Shield, FileText, Brain } from 'lucide-react';
+import { Zap, BarChart3, Users, Shield, FileText, Brain, BookOpen } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 export default function Home() {
@@ -123,6 +123,16 @@ export default function Home() {
             </CardHeader>
             <CardContent className="text-slate-600">
               Apruebe, rechace o corrija resultados de agentes y registre aprendizaje
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition cursor-pointer" onClick={() => setLocation('/dna')}>
+            <CardHeader>
+              <FileText className="w-8 h-8 text-indigo-600 mb-2" />
+              <CardTitle>ADN Organizacional</CardTitle>
+            </CardHeader>
+            <CardContent className="text-slate-600">
+              Gestione reglas, políticas, criterios y memoria institucional
             </CardContent>
           </Card>
         </div>

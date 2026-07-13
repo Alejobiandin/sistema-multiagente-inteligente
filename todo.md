@@ -60,38 +60,38 @@
 - [x] Mostrar historial de decisiones por caso
 
 ### Frontend - ADN Organizacional
-- [ ] Crear vista de repositorio de reglas y políticas
-- [ ] Permitir crear/editar reglas (solo admin)
-- [ ] Mostrar categorías: criterios técnicos, reglas internas, políticas, plantillas
-- [ ] Permitir buscar y filtrar por categoría
-- [ ] Mostrar versión y fecha de última actualización
+- [x] Crear vista de repositorio de reglas y políticas
+- [x] Permitir crear/editar reglas (solo admin)
+- [x] Mostrar categorías: criterios técnicos, reglas internas, políticas, plantillas
+- [x] Permitir buscar y filtrar por categoría
+- [x] Mostrar versión y fecha de última actualización
 
 ### Frontend - Trazabilidad y Reportes
-- [ ] Crear vista de log de auditoría por caso
-- [ ] Mostrar: acción, actor, timestamp, detalles
-- [ ] Permitir filtrar por rango de fechas y tipo de acción
+- [x] Crear vista de log de auditoría por caso
+- [x] Mostrar: acción, actor, timestamp, detalles
+- [x] Permitir filtrar por rango de fechas y tipo de acción
 - [ ] Crear reporte exportable (PDF) con resumen de caso
 - [ ] Crear reporte de liquidación (preliquidación + aprobaciones)
 
 ### Almacenamiento de Documentos
-- [ ] Implementar upload de documentos a S3 (via manus-upload-file)
-- [ ] Guardar referencias en tabla `documents`
-- [ ] Permitir descargar documentos desde UI
-- [ ] Validar tipos de archivo permitidos
+- [x] Implementar upload de documentos a S3 (via manus-upload-file)
+- [x] Guardar referencias en tabla `documents`
+- [x] Permitir descargar documentos desde UI
+- [x] Validar tipos de archivo permitidos
 
 ### Notificaciones
-- [ ] Implementar notificación cuando agente detecta anomalía
-- [ ] Implementar notificación cuando caso requiere aprobación humana
-- [ ] Implementar notificación cuando se completa etapa crítica
-- [ ] Crear panel de notificaciones en UI
-- [ ] Integrar con sistema de notificaciones Manus (si aplica)
+- [x] Implementar notificación cuando agente detecta anomalía
+- [x] Implementar notificación cuando caso requiere aprobación humana
+- [x] Implementar notificación cuando se completa etapa crítica
+- [x] Crear panel de notificaciones en UI
+- [x] Integrar con sistema de notificaciones Manus (si aplica)
 
 ### Pruebas y Validación
-- [ ] Escribir tests para routers tRPC principales
-- [ ] Escribir tests para lógica de agentes
-- [ ] Escribir tests para transiciones de estado
-- [ ] Validar flujo end-to-end: crear caso → ejecutar agentes → aprobar → cerrar
-- [ ] Validar trazabilidad: verificar que todas las acciones se registran
+- [x] Escribir tests para routers tRPC principales
+- [x] Escribir tests para lógica de agentes
+- [x] Escribir tests para transiciones de estado
+- [x] Validar flujo end-to-end: crear caso → ejecutar agentes → aprobar → cerrar
+- [x] Validar trazabilidad: verificar que todas las acciones se registran
 
 ### Documentación y Entrega
 - [ ] Documentar API de agentes
