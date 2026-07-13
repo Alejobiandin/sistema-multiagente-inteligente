@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "./_core/trpc";
+import { getDb } from "./db";
+import { payrollUploads, processingStatus } from "../drizzle/schema";
+import { queueProcessor } from "./queue-processor";
 import {
   createPayrollCase,
   getPayrollCaseById,
@@ -304,11 +307,50 @@ export const payrollRouter = router({
           payrollPeriod: z.string(),
           fileType: z.enum(["CSV", "EXCEL", "JSON"]),
           fileName: z.string(),
-          fileContent: z.string(),
+          employeeData: z.array(z.object({ name: z.string(), salary: z.number() })),
         })
       )
       .mutation(async ({ input, ctx }) => {
-        return { success: true, message: "Nomina cargada exitosamente" };
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+
+        const uploadResult = await db.insert(payrollUploads).values({
+          clientId: 1, // TODO: obtener del contexto
+          clientName: input.clientName,
+          payrollPeriod: input.payrollPeriod,
+          filename: input.fileName,
+          fileKey: `file-${Date.now()}`,
+          fileType: input.fileType,
+          employeeCount: input.employeeData.length,
+          status: "PROCESSING",
+          uploadedBy: ctx.user?.id || 0,
+          uploadedAt: new Date(),
+        });
+
+        const uploadId = (uploadResult as any).insertId || (uploadResult as any)[0]?.id;
+
+        await db.insert(processingStatus).values({
+          payrollUploadId: uploadId,
+          totalTasks: input.employeeData.length * 3,
+          completedTasks: 0,
+          failedTasks: 0,
+          progressPercentage: "0",
+          currentStage: "VALIDATE",
+        });
+
+        for (const employee of input.employeeData) {
+          await queueProcessor.addTask(uploadId, "VALIDATE", { employee }, "HIGH");
+          await queueProcessor.addTask(uploadId, "LIQUIDATE", { employee }, "HIGH");
+          await queueProcessor.addTask(uploadId, "CALCULATE_CHARGES", { employee }, "MEDIUM");
+        }
+
+        return {
+          success: true,
+          uploadId,
+          taskCount: input.employeeData.length * 3,
+          message: "Nómina cargada y procesamiento iniciado",
+          employeeCount: input.employeeData.length,
+        };
       }),
 
     list: protectedProcedure
@@ -319,8 +361,26 @@ export const payrollRouter = router({
         })
       )
       .query(async ({ input, ctx }) => {
-        return { uploads: [], total: 0 };
+        const db = await getDb();
+        if (!db) return { uploads: [], total: 0 };
+
+        try {
+          const uploads = await db.select().from(payrollUploads).limit(input.limit).offset(input.offset);
+          return { uploads, total: uploads.length };
+        } catch (error) {
+          return { uploads: [], total: 0 };
+        }
       }),
+
+    getStatus: protectedProcedure
+      .input(z.object({ uploadId: z.number() }))
+      .query(async ({ input }) => {
+        return await queueProcessor.getUploadStatus(input.uploadId);
+      }),
+
+    getQueueStats: protectedProcedure.query(async () => {
+      return queueProcessor.getStats();
+    }),
   }),
 
   // ============================================
@@ -413,3 +473,5 @@ export const payrollRouter = router({
       }),
   }),
 });
+
+export type PayrollRouter = typeof payrollRouter;
