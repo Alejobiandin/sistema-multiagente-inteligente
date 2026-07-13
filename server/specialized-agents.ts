@@ -1,6 +1,7 @@
 import { invokeLLM } from "./_core/llm";
 import { getDb } from "./db";
 import { agentExecutions } from "../drizzle/schema";
+import { calculateIndemnity, calculateEmployerCharges, SOCIAL_CHARGES, LCT } from "./normativa-argentina";
 
 /**
  * Agente Especializado en Despidos
