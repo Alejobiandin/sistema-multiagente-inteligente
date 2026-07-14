@@ -15,12 +15,22 @@ import PayrollUpload from "./pages/PayrollUpload";
 import PayrollMonitoring from "./pages/PayrollMonitoring";
 import PayrollHistory from "./pages/PayrollHistory";
 import PayrollAudit from "./pages/PayrollAudit";
+import ControlCenter from "./pages/ControlCenter";
+import AgentsPanel from "./pages/AgentsPanel";
+import AgentChat from "./pages/AgentChat";
+import TaskAssignment from "./pages/TaskAssignment";
+import WorkspaceSettings from "./pages/WorkspaceSettings";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"\\"} component={Home} />
+      <Route path={"/control-center"} component={ControlCenter} />
+      <Route path={"/agents"} component={AgentsPanel} />
+      <Route path={"/chat"} component={AgentChat} />
+      <Route path={"/tasks"} component={TaskAssignment} />
+      <Route path={"/settings"} component={WorkspaceSettings} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/cases"} component={CasesManagement} />
       <Route path="/cases/:id" component={CaseDetail} />

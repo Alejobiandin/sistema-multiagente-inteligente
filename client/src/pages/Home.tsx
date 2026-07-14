@@ -1,140 +1,218 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { startLogin } from "@/const";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Upload, Activity, History, FileText, Zap, Shield, Database, Users } from "lucide-react";
-import { useLocation } from "wouter";
+import { ArrowRight, Brain, Zap, BarChart3, Settings, MessageSquare, CheckCircle2 } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Home() {
-  const [, navigate] = useLocation();
-  const { user, loading, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Hero Section */}
-      <div className="relative px-6 py-20 sm:py-32">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl sm:text-6xl font-bold text-white mb-6">SNISSI</h1>
-          <p className="text-xl sm:text-2xl text-slate-300 mb-8">
-            Sistema Operativo Cognitivo Multiagente para Estudios Profesionales
-          </p>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Automatiza y supervisa el ciclo completo de liquidación de nómina con inteligencia artificial y control humano total
-          </p>
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+        <div className="max-w-2xl text-center space-y-8">
+          <div className="space-y-4">
+            <h1 className="text-5xl font-bold text-white">SNISSI</h1>
+            <p className="text-2xl text-slate-300">
+              Sistema Operativo Cognitivo Multiagente para Estudios Profesionales
+            </p>
+            <p className="text-slate-400 text-lg">
+              Automatiza y supervisa el ciclo completo de liquidación de nómina con inteligencia artificial
+            </p>
+          </div>
+
+          <Button
+            onClick={() => { startLogin(); }}
+            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-6 text-lg"
+          >
+            Inicia Sesión
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
         </div>
       </div>
+    );
+  }
 
-      {/* Main Features */}
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <Card
-            className="hover:shadow-2xl transition cursor-pointer bg-slate-800 border-slate-700 text-white"
-            onClick={() => navigate("/payroll/upload")}
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Upload className="h-5 w-5 text-blue-400" />
-                Cargar Nóminas
-              </CardTitle>
-              <CardDescription className="text-slate-400">Sube archivos para procesamiento automático</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-slate-300">Carga masiva en CSV, Excel o JSON con validación automática</p>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="hover:shadow-2xl transition cursor-pointer bg-slate-800 border-slate-700 text-white"
-            onClick={() => navigate("/payroll/monitoring")}
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Activity className="h-5 w-5 text-green-400" />
-                Monitoreo en Tiempo Real
-              </CardTitle>
-              <CardDescription className="text-slate-400">Sigue el progreso de liquidaciones</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-slate-300">Visualiza 100+ liquidaciones simultáneas con métricas de rendimiento</p>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="hover:shadow-2xl transition cursor-pointer bg-slate-800 border-slate-700 text-white"
-            onClick={() => navigate("/payroll/history")}
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <History className="h-5 w-5 text-purple-400" />
-                Historial de Liquidaciones
-              </CardTitle>
-              <CardDescription className="text-slate-400">Accede a liquidaciones pasadas</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-slate-300">Descarga y revisa liquidaciones procesadas con filtros avanzados</p>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="hover:shadow-2xl transition cursor-pointer bg-slate-800 border-slate-700 text-white"
-            onClick={() => navigate("/payroll/audit")}
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <FileText className="h-5 w-5 text-orange-400" />
-                Auditoría Completa
-              </CardTitle>
-              <CardDescription className="text-slate-400">Trazabilidad de todas las acciones</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-slate-300">Log detallado de cada decisión, agente e intervención humana</p>
-            </CardContent>
-          </Card>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold text-white">Bienvenido, {user?.name || "Usuario"}</h1>
+          <p className="text-slate-400 text-lg">
+            Accede a tu Centro de Control para gestionar todas tus áreas de trabajo
+          </p>
         </div>
 
-        {/* Core Features */}
-        <div className="mt-16 pt-12 border-t border-slate-700">
-          <h2 className="text-3xl font-bold text-white mb-8 text-center">Características Principales</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <Zap className="h-8 w-8 text-yellow-400 mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">9 Agentes IA</h3>
-              <p className="text-sm text-slate-400">Especializados en liquidación, impuestos, auditoría y comunicación</p>
-            </div>
+        {/* Main CTA */}
+        <Link href="/control-center">
+          <Card className="bg-gradient-to-r from-blue-600 to-blue-700 border-0 cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="pt-8 pb-8">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-2">Centro de Control</h2>
+                  <p className="text-blue-100">Accede al panel principal de gestión</p>
+                </div>
+                <Zap className="h-12 w-12 text-blue-200" />
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
-            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <Shield className="h-8 w-8 text-green-400 mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">Supervisión Humana</h3>
-              <p className="text-sm text-slate-400">Panel de aprobación con conversión de decisiones en aprendizaje</p>
-            </div>
+        {/* Quick Access */}
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-4">Acceso Rápido</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Link href="/control-center">
+              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+                      <Brain className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="text-white">Centro de Control</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-slate-400">
+                    Gestiona todas tus áreas de trabajo desde un único lugar
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </Link>
 
-            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <Database className="h-8 w-8 text-blue-400 mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">ADN Organizacional</h3>
-              <p className="text-sm text-slate-400">Repositorio de reglas, políticas y memoria institucional</p>
-            </div>
+            <Link href="/agents">
+              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-green-500 to-green-600 text-white">
+                      <Zap className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="text-white">Panel de Agentes</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-slate-400">
+                    Monitorea el estado y progreso de todos los agentes en tiempo real
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </Link>
 
-            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <Users className="h-8 w-8 text-purple-400 mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">Cargas Sociales</h3>
-              <p className="text-sm text-slate-400">Cálculo automático de aportes, retenciones y fondos</p>
-            </div>
+            <Link href="/chat">
+              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 text-white">
+                      <MessageSquare className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="text-white">Diálogo con Agentes</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-slate-400">
+                    Comunícate directamente con los agentes y gestiona tareas
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/tasks">
+              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 text-white">
+                      <CheckCircle2 className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="text-white">Asignación de Tareas</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-slate-400">
+                    Designa tareas a agentes o arrastra entre áreas
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/payroll/upload">
+              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-red-500 to-red-600 text-white">
+                      <BarChart3 className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="text-white">Cargar Nóminas</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-slate-400">
+                    Sube archivos para procesamiento automático
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/settings">
+              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-slate-500 to-slate-600 text-white">
+                      <Settings className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="text-white">Personalización</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-slate-400">
+                    Adapta tu workspace según tus preferencias
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-8 text-white">
-            <div className="text-4xl font-bold mb-2">100+</div>
-            <p className="text-blue-100">Liquidaciones Simultáneas</p>
-          </div>
+        {/* Features */}
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-4">Características Principales</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="bg-slate-800 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Agentes IA Especializados</CardTitle>
+              </CardHeader>
+              <CardContent className="text-slate-300">
+                9 agentes especializados que aprenden y se adaptan a tus necesidades
+              </CardContent>
+            </Card>
 
-          <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-8 text-white">
-            <div className="text-4xl font-bold mb-2">0%</div>
-            <p className="text-green-100">Intervención Manual Requerida</p>
-          </div>
+            <Card className="bg-slate-800 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Procesamiento Masivo</CardTitle>
+              </CardHeader>
+              <CardContent className="text-slate-300">
+                Procesa 100+ liquidaciones simultáneamente sin intervención humana
+              </CardContent>
+            </Card>
 
-          <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-8 text-white">
-            <div className="text-4xl font-bold mb-2">100%</div>
-            <p className="text-purple-100">Trazabilidad Completa</p>
+            <Card className="bg-slate-800 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Trazabilidad Completa</CardTitle>
+              </CardHeader>
+              <CardContent className="text-slate-300">
+                Log de auditoría detallado de cada acción y decisión tomada
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Normativa Argentina</CardTitle>
+              </CardHeader>
+              <CardContent className="text-slate-300">
+                Integración completa de LCT, convenios y cargas sociales
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
