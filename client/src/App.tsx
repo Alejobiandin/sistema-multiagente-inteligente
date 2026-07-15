@@ -3,6 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
+import MainLayout from "./components/MainLayout";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -26,24 +27,32 @@ function Router() {
   return (
     <Switch>
       <Route path={"\\"} component={Home} />
-      <Route path={"/control-center"} component={ControlCenter} />
-      <Route path={"/agents"} component={AgentsPanel} />
-      <Route path={"/chat"} component={AgentChat} />
-      <Route path={"/tasks"} component={TaskAssignment} />
-      <Route path={"/settings"} component={WorkspaceSettings} />
-      <Route path={"/dashboard"} component={Dashboard} />
-      <Route path={"/cases"} component={CasesManagement} />
-      <Route path="/cases/:id" component={CaseDetail} />
-      <Route path={"/news"} component={NewsInbox} />
-      <Route path={"/approvals"} component={HumanApprovals} />
-      <Route path={"/dna"} component={OrganizationalDNA} />
-      <Route path={"/payroll/upload"} component={PayrollUpload} />
-      <Route path={"/payroll/monitoring"} component={PayrollMonitoring} />
-      <Route path={"/payroll/history"} component={PayrollHistory} />
-      <Route path={"/payroll/audit"} component={PayrollAudit} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
+      <Route path="*">
+        {() => (
+          <MainLayout>
+            <Switch>
+              <Route path={"/control-center"} component={ControlCenter} />
+              <Route path={"/agents"} component={AgentsPanel} />
+              <Route path={"/chat"} component={AgentChat} />
+              <Route path={"/tasks"} component={TaskAssignment} />
+              <Route path={"/settings"} component={WorkspaceSettings} />
+              <Route path={"/dashboard"} component={Dashboard} />
+              <Route path={"/cases"} component={CasesManagement} />
+              <Route path="/cases/:id" component={CaseDetail} />
+              <Route path={"/news"} component={NewsInbox} />
+              <Route path={"/approvals"} component={HumanApprovals} />
+              <Route path={"/dna"} component={OrganizationalDNA} />
+              <Route path={"/payroll/upload"} component={PayrollUpload} />
+              <Route path={"/payroll/monitoring"} component={PayrollMonitoring} />
+              <Route path={"/payroll/history"} component={PayrollHistory} />
+              <Route path={"/payroll/audit"} component={PayrollAudit} />
+              <Route path={"/404"} component={NotFound} />
+              {/* Final fallback route */}
+              <Route component={NotFound} />
+            </Switch>
+          </MainLayout>
+        )}
+      </Route>
     </Switch>
   );
 }
