@@ -1,49 +1,57 @@
-# SNISSI - Rediseño de Interfaz: Centro de Control Moderno
+# SNISSI - Conversión a Plataforma 100% Funcional
 
-## Fase 1: Dashboard Principal Rediseñado
-- [x] Crear nuevo Home.tsx como Centro de Control
-- [x] Diseñar tarjetas de áreas (Liquidación, Impuestos, Auditoría, Contabilidad, Economía)
-- [x] Mostrar estado de cada área: tareas pendientes, agentes activos, progreso
-- [x] Mostrar alertas/anomalías detectadas por agentes
-- [x] Diseño moderno, estético, llamativo con gradientes y animaciones
+## Fase 1: Procesamiento Real de Nóminas
+- [x] Crear parser real para CSV/Excel/JSON
+- [x] Validar estructura de datos (campos requeridos, tipos)
+- [x] Implementar cálculos reales de liquidación según LCT
+- [x] Calcular cargas sociales reales (aportes, retenciones, ART)
+- [ ] Guardar resultados en BD
+- [ ] Crear endpoint tRPC para procesar nómina
 
-## Fase 2: Panel de Agentes Activos
-- [x] Crear página AgentsPanel.tsx
-- [x] Mostrar lista de agentes: nombre, área, tarea actual, progreso, tiempo estimado
-- [x] Actualización en tiempo real
-- [x] Hacer clic en agente para ver detalles/historial
-- [x] Indicadores visuales de estado (activo, idle, error)
+## Fase 2: Integración Real de LLM con Contexto
+- [ ] Cargar contexto del usuario/cliente en cada llamada a agente
+- [ ] Implementar memoria de agentes (historial de decisiones)
+- [ ] Crear prompts específicos por tipo de tarea
+- [ ] Implementar cadena de razonamiento en agentes
+- [ ] Guardar respuestas de agentes en BD para auditoría
 
-## Fase 3: Interfaz de Diálogo con Agentes
-- [x] Crear componente ChatWithAgent.tsx (chat bidireccional)
-- [x] Crear componente TaskPanel.tsx (tareas con respuestas)
-- [x] Integrar ambas en una interfaz unificada
-- [x] Mostrar historial de conversaciones
-- [x] Permitir enviar instrucciones y recibir respuestas de agentes
+## Fase 3: Persistencia Completa en BD
+- [ ] Conectar todas las operaciones a BD real
+- [ ] Guardar estado de cada liquidación
+- [ ] Guardar decisiones de agentes
+- [ ] Guardar correcciones humanas
+- [ ] Implementar recuperación de datos históricos
 
-## Fase 4: Sistema de Designación de Tareas
-- [x] Crear componente TaskAssignment.tsx
-- [x] Implementar arrastrar-soltar de tareas entre áreas
-- [x] Crear formulario de "Nueva Tarea" con campos: área, tipo, descripción, agentes
-- [x] Validar y enviar tareas a la cola
-- [x] Mostrar confirmación y asignación
+## Fase 4: Conectar UI con Backend Real
+- [ ] Actualizar PayrollUpload para procesar archivos reales
+- [ ] Conectar PayrollMonitoring con datos reales de cola
+- [ ] Conectar PayrollHistory con BD
+- [ ] Conectar ControlCenter con datos reales de agentes
+- [ ] Conectar AgentChat con LLM real
 
-## Fase 5: Personalización de Workspace
-- [x] Crear página Settings.tsx para personalización
-- [x] Permitir configurar: tema, densidad de información, widgets visibles
-- [x] Guardar preferencias por usuario
-- [x] Aplicar preferencias en todas las vistas
-- [x] Opción de "Resetear a default"
+## Fase 5: Sistema de Aprendizaje de Agentes
+- [ ] Guardar decisiones humanas en ADN Organizacional
+- [ ] Implementar reconocimiento de patrones por usuario
+- [ ] Crear sugerencias predictivas basadas en historial
+- [ ] Implementar feedback loop: corrección → aprendizaje
 
-## Fase 6: Integración Completa
-- [x] Actualizar App.tsx con nuevas rutas
-- [x] Crear layout principal que integre todas las vistas
-- [x] Asegurar navegación fluida entre secciones
-- [x] Sincronizar estado global (Redux/Context)
-- [x] Pruebas de flujo completo
+## Fase 6: Flujo End-to-End Funcional
+- [ ] Usuario carga nómina → Sistema procesa → Resultados guardados
+- [ ] Usuario descarga liquidaciones procesadas
+- [ ] Usuario ve historial completo
+- [ ] Usuario puede corregir y sistema aprende
+- [ ] Notificaciones reales en cada etapa
 
-## Fase 7: Pruebas y Ajustes Finales
-- [ ] Pruebas visuales en diferentes dispositivos
-- [ ] Ajustes de diseño según feedback
-- [ ] Optimizar performance
-- [ ] Crear checkpoint final
+## Fase 7: Pruebas Integrales
+- [ ] Prueba: Cargar nómina simple y procesar
+- [ ] Prueba: Validar cálculos de liquidación
+- [ ] Prueba: Validar cargas sociales
+- [ ] Prueba: Validar persistencia en BD
+- [ ] Prueba: Validar flujo completo end-to-end
+- [ ] Prueba: 100+ liquidaciones simultáneas
+
+## Fase 8: Entrega Final
+- [ ] Documentación de uso
+- [ ] Documentación de API
+- [ ] Checkpoint final
+- [ ] Entrega a usuario
