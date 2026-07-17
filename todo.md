@@ -9,11 +9,11 @@
 - [ ] Crear endpoint tRPC para procesar nómina
 
 ## Fase 2: Integración Real de LLM con Contexto
-- [ ] Cargar contexto del usuario/cliente en cada llamada a agente
-- [ ] Implementar memoria de agentes (historial de decisiones)
-- [ ] Crear prompts específicos por tipo de tarea
-- [ ] Implementar cadena de razonamiento en agentes
-- [ ] Guardar respuestas de agentes en BD para auditoría
+- [x] Cargar contexto del usuario/cliente en cada llamada a agente
+- [x] Implementar memoria de agentes (historial de decisiones)
+- [x] Crear prompts específicos por tipo de tarea
+- [x] Implementar cadena de razonamiento en agentes
+- [x] Guardar respuestas de agentes en BD para auditoría
 
 ## Fase 3: Persistencia Completa en BD
 - [ ] Conectar todas las operaciones a BD real
