@@ -3,6 +3,13 @@ import { router, protectedProcedure } from "./_core/trpc";
 import { getDb } from "./db";
 import { payrollUploads, processingStatus } from "../drizzle/schema";
 import { queueProcessor } from "./queue-processor";
+import { calculatePayroll } from "./payroll-processor";
+import { 
+  savePayrollResult, 
+  logAuditEntry, 
+  updateCaseStage,
+  getFullCase
+} from "./persistence-layer";
 import {
   createPayrollCase,
   getPayrollCaseById,
