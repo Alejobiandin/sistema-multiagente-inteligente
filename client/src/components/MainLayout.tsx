@@ -1,129 +1,188 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   LayoutDashboard,
-  Zap,
-  MessageSquare,
-  CheckCircle2,
-  Settings,
-  LogOut,
-  Menu,
-  X,
-  Bell,
   DollarSign,
   BookOpen,
   TrendingUp,
   FileText,
   Users,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  ChevronDown,
 } from "lucide-react";
-import { useState } from "react";
+
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
-const navItems = [
-  { href: "/control-center-v2", label: "Centro de Control V2", icon: LayoutDashboard },
-  { href: "/control-center", label: "Centro de Control", icon: LayoutDashboard },
-  { href: "/agents", label: "Agentes", icon: Zap },
-  { href: "/chat", label: "Diálogo", icon: MessageSquare },
-  { href: "/tasks", label: "Tareas", icon: CheckCircle2 },
-  { href: "/taxes", label: "Impuestos", icon: DollarSign },
-  { href: "/accounting", label: "Contabilidad", icon: BookOpen },
-  { href: "/economy", label: "Economía", icon: TrendingUp },
-  { href: "/billing", label: "Facturación", icon: FileText },
-  { href: "/clients-employees", label: "Clientes y Empleados", icon: Users },
-  { href: "/settings", label: "Configuración", icon: Settings },
+// Módulos organizados por categoría
+const modules = [
+  {
+    category: "Gestión",
+    icon: LayoutDashboard,
+    color: "bg-blue-500",
+    items: [
+      { href: "/control-center-v2", label: "Centro de Control", icon: LayoutDashboard },
+    ],
+  },
+  {
+    category: "Contabilidad",
+    icon: BookOpen,
+    color: "bg-purple-500",
+    items: [
+      { href: "/taxes", label: "Impuestos", icon: DollarSign },
+      { href: "/accounting", label: "Contabilidad", icon: BookOpen },
+      { href: "/billing", label: "Facturación", icon: FileText },
+    ],
+  },
+  {
+    category: "Análisis",
+    icon: TrendingUp,
+    color: "bg-emerald-500",
+    items: [
+      { href: "/economy", label: "Economía", icon: TrendingUp },
+    ],
+  },
+  {
+    category: "Recursos",
+    icon: Users,
+    color: "bg-orange-500",
+    items: [
+      { href: "/clients-employees", label: "Clientes y Empleados", icon: Users },
+    ],
+  },
 ];
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const { user, logout } = useAuth();
   const { settings } = useWorkspace();
+  const { theme } = useTheme();
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>("Gestión");
 
-  const getDensityClass = () => {
-    switch (settings.density) {
-      case "compact":
-        return "gap-1 p-2";
-      case "spacious":
-        return "gap-4 p-6";
-      default:
-        return "gap-3 p-4";
-    }
-  };
-
-  const getThemeClass = () => {
-    return settings.theme === "dark"
-      ? "bg-slate-900 text-white"
-      : "bg-white text-slate-900";
-  };
+  const isDark = theme === "dark";
 
   return (
-    <div className={`min-h-screen flex ${getThemeClass()}`}>
+    <div className={`min-h-screen flex ${isDark ? "bg-slate-950" : "bg-slate-50"}`}>
       {/* Sidebar */}
       <aside
         className={`${
-          sidebarOpen ? "w-64" : "w-20"
+          sidebarOpen ? "w-72" : "w-20"
         } transition-all duration-300 ${
-          settings.theme === "dark"
-            ? "bg-slate-800 border-slate-700"
-            : "bg-slate-100 border-slate-200"
-        } border-r flex flex-col`}
+          isDark ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"
+        } border-r flex flex-col shadow-lg`}
       >
-        {/* Logo */}
-        <div className="p-4 flex items-center justify-between">
-          {sidebarOpen && <h2 className="font-bold text-lg">SNISSI</h2>}
+        {/* Header */}
+        <div className={`p-6 flex items-center justify-between border-b ${isDark ? "border-slate-800" : "border-slate-200"}`}>
+          {sidebarOpen && (
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">SN</span>
+              </div>
+              <h1 className={`font-bold text-lg ${isDark ? "text-white" : "text-slate-900"}`}>SNISSI</h1>
+            </div>
+          )}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-1 hover:bg-slate-700 rounded"
+            className={`p-2 rounded-lg transition-colors ${
+              isDark ? "hover:bg-slate-800" : "hover:bg-slate-100"
+            }`}
           >
             {sidebarOpen ? (
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             ) : (
-              <Menu className="h-4 w-4" />
+              <Menu className="h-5 w-5" />
             )}
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className={`flex-1 space-y-2 ${getDensityClass()}`}>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location === item.href;
-            return (
-              <Link key={item.href} href={item.href}>
-                <a
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                    isActive
-                      ? settings.theme === "dark"
-                        ? "bg-blue-600 text-white"
-                        : "bg-blue-100 text-blue-900"
-                      : settings.theme === "dark"
-                        ? "hover:bg-slate-700"
-                        : "hover:bg-slate-200"
-                  }`}
-                >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  {sidebarOpen && <span className="text-sm">{item.label}</span>}
-                </a>
-              </Link>
-            );
-          })}
+        <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+          {modules.map((module) => (
+            <div key={module.category}>
+              <button
+                onClick={() =>
+                  setExpandedCategory(
+                    expandedCategory === module.category ? null : module.category
+                  )
+                }
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  expandedCategory === module.category
+                    ? isDark
+                      ? "bg-slate-800"
+                      : "bg-slate-100"
+                    : isDark
+                      ? "hover:bg-slate-800"
+                      : "hover:bg-slate-100"
+                }`}
+              >
+                <div className={`${module.color} p-2 rounded-lg text-white`}>
+                  <module.icon className="w-4 h-4" />
+                </div>
+                {sidebarOpen && (
+                  <>
+                    <span className={`flex-1 text-sm font-semibold text-left ${isDark ? "text-white" : "text-slate-900"}`}>
+                      {module.category}
+                    </span>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform ${
+                        expandedCategory === module.category ? "rotate-180" : ""
+                      } ${isDark ? "text-slate-400" : "text-slate-600"}`}
+                    />
+                  </>
+                )}
+              </button>
+
+              {/* Submenu */}
+              {sidebarOpen && expandedCategory === module.category && (
+                <div className="ml-4 mt-2 space-y-1 border-l-2 border-slate-700 pl-2">
+                  {module.items.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location === item.href;
+                    return (
+                      <Link key={item.href} href={item.href}>
+                        <a
+                          className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+                            isActive
+                              ? isDark
+                                ? "bg-blue-600/20 text-blue-400"
+                                : "bg-blue-100 text-blue-700"
+                              : isDark
+                                ? "text-slate-400 hover:text-slate-300 hover:bg-slate-800"
+                                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                          }`}
+                        >
+                          <Icon className="w-4 h-4" />
+                          {item.label}
+                        </a>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ))}
         </nav>
 
         {/* User Section */}
-        <div className={`border-t ${settings.theme === "dark" ? "border-slate-700" : "border-slate-200"} p-4 space-y-2`}>
+        <div
+          className={`border-t ${isDark ? "border-slate-800" : "border-slate-200"} p-4 space-y-3`}
+        >
           {sidebarOpen && (
-            <div className="text-xs truncate">
-              <p className="font-semibold">{user?.name || "Usuario"}</p>
-              <p className={settings.theme === "dark" ? "text-slate-400" : "text-slate-600"}>
-                {user?.email || ""}
+            <div className={`text-xs ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+              <p className={`font-semibold ${isDark ? "text-slate-300" : "text-slate-900"}`}>
+                {user?.name || "Usuario"}
               </p>
+              <p className="truncate">{user?.email || ""}</p>
             </div>
           )}
           <Button
@@ -143,52 +202,33 @@ export default function MainLayout({ children }: MainLayoutProps) {
         {/* Top Bar */}
         <header
           className={`${
-            settings.theme === "dark"
-              ? "bg-slate-800 border-slate-700"
-              : "bg-slate-100 border-slate-200"
-          } border-b px-6 py-4 flex items-center justify-between`}
+            isDark ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"
+          } border-b px-8 py-4 flex items-center justify-between shadow-sm`}
         >
-          <div className="flex-1">
-            <h1 className="text-xl font-semibold">
-              {navItems.find((item) => item.href === location)?.label || "SNISSI"}
+          <div>
+            <h1 className={`text-2xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+              {modules
+                .flatMap((m) => m.items)
+                .find((item) => item.href === location)?.label || "SNISSI"}
             </h1>
+            <p className={`text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+              Plataforma de Contabilidad Multiagente
+            </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            {/* Notifications */}
-            <button
-              className={`p-2 rounded-lg ${
-                settings.theme === "dark"
-                  ? "hover:bg-slate-700"
-                  : "hover:bg-slate-200"
-              }`}
-            >
-              <Bell className="h-5 w-5" />
-              <Badge className="absolute -top-1 -right-1 bg-red-500 h-5 w-5 flex items-center justify-center text-xs">
-                3
-              </Badge>
-            </button>
-
-            {/* Theme Indicator */}
-            <Badge
-              variant="outline"
-              className={
-                settings.theme === "dark"
-                  ? "bg-slate-700 border-slate-600"
-                  : "bg-slate-200 border-slate-300"
-              }
-            >
+          <div className={`px-4 py-2 rounded-lg ${isDark ? "bg-slate-800" : "bg-slate-100"}`}>
+            <span className={`text-xs font-semibold ${isDark ? "text-slate-300" : "text-slate-700"}`}>
               {settings.density === "compact"
                 ? "Compacto"
                 : settings.density === "spacious"
                   ? "Espacioso"
                   : "Normal"}
-            </Badge>
+            </span>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className={`flex-1 overflow-auto ${getDensityClass()}`}>
+        <main className={`flex-1 overflow-auto ${isDark ? "bg-slate-950" : "bg-slate-50"} p-8`}>
           {children}
         </main>
       </div>

@@ -58,7 +58,8 @@
 - [x] Crear ClientsEmployeesModule (Gestión de Clientes y Empleados)
 - [x] Integrar rutas en App.tsx
 - [x] Actualizar MainLayout con navegación
-- [ ] Conectar módulos con routers tRPC
+- [x] Conectar módulos con routers tRPC
+- [ ] Conectar routers con BD real
 - [ ] Implementar búsqueda y filtrado
 - [ ] Agregar formularios para CRUD
 
