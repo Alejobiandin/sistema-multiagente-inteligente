@@ -2,7 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Brain, Zap, BarChart3, Settings, MessageSquare, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Brain, Zap, BarChart3, Settings, MessageSquare, CheckCircle2, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -10,209 +10,258 @@ export default function Home() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-        <div className="max-w-2xl text-center space-y-8">
-          <div className="space-y-4">
-            <h1 className="text-5xl font-bold text-white">SNISSI</h1>
-            <p className="text-2xl text-slate-300">
-              Sistema Operativo Cognitivo Multiagente para Estudios Profesionales
-            </p>
-            <p className="text-slate-400 text-lg">
-              Automatiza y supervisa el ciclo completo de liquidación de nómina con inteligencia artificial
-            </p>
-          </div>
+      <div className="min-h-screen bg-background overflow-hidden">
+        {/* Fondo con gradiente moderno */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5 pointer-events-none" />
+        
+        {/* Elementos decorativos */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -z-10" />
 
-          <Button
-            onClick={() => { startLogin(); }}
-            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-6 text-lg"
-          >
-            Inicia Sesión
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+        <div className="relative min-h-screen flex items-center justify-center p-4">
+          <div className="max-w-2xl text-center space-y-8 animate-fade-in-up">
+            {/* Logo y Título */}
+            <div className="space-y-4">
+              <div className="inline-flex items-center justify-center gap-2 mb-4">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-accent">
+                  <Brain className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h1 className="text-6xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+                SNISSI
+              </h1>
+              <p className="text-2xl font-semibold text-foreground">
+                Sistema Multiagente Inteligente
+              </p>
+              <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                Automatiza y supervisa el ciclo completo de gestión contable, fiscal y financiera con inteligencia artificial avanzada
+              </p>
+            </div>
+
+            {/* CTA Principal */}
+            <Button
+              onClick={() => { startLogin(); }}
+              className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              Inicia Sesión
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+
+            {/* Características rápidas */}
+            <div className="grid grid-cols-3 gap-4 pt-8">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">5</div>
+                <div className="text-sm text-muted-foreground">Agentes IA</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-accent">100%</div>
+                <div className="text-sm text-muted-foreground">Automatizado</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-secondary">24/7</div>
+                <div className="text-sm text-muted-foreground">Disponible</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-background">
+      {/* Fondo decorativo */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold text-white">Bienvenido, {user?.name || "Usuario"}</h1>
-          <p className="text-slate-400 text-lg">
-            Accede a tu Centro de Control para gestionar todas tus áreas de trabajo
+        <div className="mb-12 space-y-4 animate-fade-in-up">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-primary to-accent">
+              <Sparkles className="h-5 w-5 text-white" />
+            </div>
+            <span className="text-sm font-semibold text-primary">Bienvenido de vuelta</span>
+          </div>
+          <h1 className="text-5xl font-bold text-foreground">
+            Hola, {user?.name || "Usuario"}
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl">
+            Accede a tu Centro de Control para gestionar todas tus áreas de trabajo con agentes inteligentes
           </p>
         </div>
 
         {/* Main CTA */}
         <Link href="/control-center">
-          <Card className="bg-gradient-to-r from-blue-600 to-blue-700 border-0 cursor-pointer hover:shadow-lg transition-shadow">
-            <CardContent className="pt-8 pb-8">
-              <div className="flex items-center justify-between">
+          <div className="mb-12 cursor-pointer group">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/90 to-accent/90 p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-primary/20">
+              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-white mb-2">Centro de Control</h2>
-                  <p className="text-blue-100">Accede al panel principal de gestión</p>
+                  <h2 className="text-3xl font-bold text-white mb-2">Centro de Control</h2>
+                  <p className="text-white/80">Accede al panel principal de gestión integrado</p>
                 </div>
-                <Zap className="h-12 w-12 text-blue-200" />
+                <div className="p-4 rounded-xl bg-white/10 backdrop-blur-sm">
+                  <Zap className="h-8 w-8 text-white" />
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </Link>
 
-        {/* Quick Access */}
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-4">Acceso Rápido</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Quick Access Grid */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-foreground mb-6">Acceso Rápido</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Centro de Control */}
             <Link href="/control-center">
-              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white">
-                      <Brain className="h-6 w-6" />
+              <div className="group cursor-pointer">
+                <div className="rounded-xl bg-card border border-border p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 group-hover:from-primary/30 group-hover:to-accent/30 transition-all">
+                      <Brain className="h-6 w-6 text-primary" />
                     </div>
-                    <CardTitle className="text-white">Centro de Control</CardTitle>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-slate-400">
-                    Gestiona todas tus áreas de trabajo desde un único lugar
-                  </CardDescription>
-                </CardContent>
-              </Card>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Centro de Control</h3>
+                  <p className="text-sm text-muted-foreground">Gestiona todas tus áreas desde un único lugar</p>
+                </div>
+              </div>
             </Link>
 
+            {/* Panel de Agentes */}
             <Link href="/agents">
-              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-lg bg-gradient-to-br from-green-500 to-green-600 text-white">
-                      <Zap className="h-6 w-6" />
+              <div className="group cursor-pointer">
+                <div className="rounded-xl bg-card border border-border p-6 hover:border-accent/50 transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-accent/20 to-secondary/20 group-hover:from-accent/30 group-hover:to-secondary/30 transition-all">
+                      <Zap className="h-6 w-6 text-accent" />
                     </div>
-                    <CardTitle className="text-white">Panel de Agentes</CardTitle>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-slate-400">
-                    Monitorea el estado y progreso de todos los agentes en tiempo real
-                  </CardDescription>
-                </CardContent>
-              </Card>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Panel de Agentes</h3>
+                  <p className="text-sm text-muted-foreground">Monitorea el estado en tiempo real</p>
+                </div>
+              </div>
             </Link>
 
+            {/* Diálogo con Agentes */}
             <Link href="/chat">
-              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 text-white">
-                      <MessageSquare className="h-6 w-6" />
+              <div className="group cursor-pointer">
+                <div className="rounded-xl bg-card border border-border p-6 hover:border-secondary/50 transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-secondary/20 to-primary/20 group-hover:from-secondary/30 group-hover:to-primary/30 transition-all">
+                      <MessageSquare className="h-6 w-6 text-secondary" />
                     </div>
-                    <CardTitle className="text-white">Diálogo con Agentes</CardTitle>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-slate-400">
-                    Comunícate directamente con los agentes y gestiona tareas
-                  </CardDescription>
-                </CardContent>
-              </Card>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Diálogo con Agentes</h3>
+                  <p className="text-sm text-muted-foreground">Comunícate directamente con los agentes</p>
+                </div>
+              </div>
             </Link>
 
+            {/* Asignación de Tareas */}
             <Link href="/tasks">
-              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 text-white">
-                      <CheckCircle2 className="h-6 w-6" />
+              <div className="group cursor-pointer">
+                <div className="rounded-xl bg-card border border-border p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 group-hover:from-primary/30 group-hover:to-secondary/30 transition-all">
+                      <CheckCircle2 className="h-6 w-6 text-primary" />
                     </div>
-                    <CardTitle className="text-white">Asignación de Tareas</CardTitle>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-slate-400">
-                    Designa tareas a agentes o arrastra entre áreas
-                  </CardDescription>
-                </CardContent>
-              </Card>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Asignación de Tareas</h3>
+                  <p className="text-sm text-muted-foreground">Designa tareas a agentes</p>
+                </div>
+              </div>
             </Link>
 
+            {/* Cargar Nóminas */}
             <Link href="/payroll/upload">
-              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-lg bg-gradient-to-br from-red-500 to-red-600 text-white">
-                      <BarChart3 className="h-6 w-6" />
+              <div className="group cursor-pointer">
+                <div className="rounded-xl bg-card border border-border p-6 hover:border-accent/50 transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-accent/20 to-primary/20 group-hover:from-accent/30 group-hover:to-primary/30 transition-all">
+                      <BarChart3 className="h-6 w-6 text-accent" />
                     </div>
-                    <CardTitle className="text-white">Cargar Nóminas</CardTitle>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-slate-400">
-                    Sube archivos para procesamiento automático
-                  </CardDescription>
-                </CardContent>
-              </Card>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Cargar Nóminas</h3>
+                  <p className="text-sm text-muted-foreground">Sube archivos para procesamiento</p>
+                </div>
+              </div>
             </Link>
 
+            {/* Configuración */}
             <Link href="/settings">
-              <Card className="bg-slate-800 border-slate-700 cursor-pointer hover:border-slate-600 transition-all">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-lg bg-gradient-to-br from-slate-500 to-slate-600 text-white">
-                      <Settings className="h-6 w-6" />
+              <div className="group cursor-pointer">
+                <div className="rounded-xl bg-card border border-border p-6 hover:border-secondary/50 transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-secondary/20 to-accent/20 group-hover:from-secondary/30 group-hover:to-accent/30 transition-all">
+                      <Settings className="h-6 w-6 text-secondary" />
                     </div>
-                    <CardTitle className="text-white">Personalización</CardTitle>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-slate-400">
-                    Adapta tu workspace según tus preferencias
-                  </CardDescription>
-                </CardContent>
-              </Card>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Configuración</h3>
+                  <p className="text-sm text-muted-foreground">Personaliza tu workspace</p>
+                </div>
+              </div>
             </Link>
           </div>
         </div>
 
-        {/* Features */}
+        {/* Features Section */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-4">Características Principales</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">Agentes IA Especializados</CardTitle>
-              </CardHeader>
-              <CardContent className="text-slate-300">
-                9 agentes especializados que aprenden y se adaptan a tus necesidades
-              </CardContent>
-            </Card>
+          <h2 className="text-2xl font-bold text-foreground mb-6">Características Principales</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="rounded-xl bg-card border border-border p-6 hover:border-primary/50 transition-all duration-300">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex-shrink-0">
+                  <Brain className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Agentes IA Especializados</h3>
+                  <p className="text-sm text-muted-foreground">5 agentes especializados que aprenden y se adaptan a tus necesidades</p>
+                </div>
+              </div>
+            </div>
 
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">Procesamiento Masivo</CardTitle>
-              </CardHeader>
-              <CardContent className="text-slate-300">
-                Procesa 100+ liquidaciones simultáneamente sin intervención humana
-              </CardContent>
-            </Card>
+            <div className="rounded-xl bg-card border border-border p-6 hover:border-accent/50 transition-all duration-300">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-accent/20 to-secondary/20 flex-shrink-0">
+                  <Zap className="h-6 w-6 text-accent" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Procesamiento Masivo</h3>
+                  <p className="text-sm text-muted-foreground">Procesa 100+ operaciones simultáneamente sin intervención humana</p>
+                </div>
+              </div>
+            </div>
 
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">Trazabilidad Completa</CardTitle>
-              </CardHeader>
-              <CardContent className="text-slate-300">
-                Log de auditoría detallado de cada acción y decisión tomada
-              </CardContent>
-            </Card>
+            <div className="rounded-xl bg-card border border-border p-6 hover:border-secondary/50 transition-all duration-300">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-secondary/20 to-primary/20 flex-shrink-0">
+                  <BarChart3 className="h-6 w-6 text-secondary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Trazabilidad Completa</h3>
+                  <p className="text-sm text-muted-foreground">Log de auditoría detallado de cada acción y decisión tomada</p>
+                </div>
+              </div>
+            </div>
 
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">Normativa Argentina</CardTitle>
-              </CardHeader>
-              <CardContent className="text-slate-300">
-                Integración completa de LCT, convenios y cargas sociales
-              </CardContent>
-            </Card>
+            <div className="rounded-xl bg-card border border-border p-6 hover:border-primary/50 transition-all duration-300">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 flex-shrink-0">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Normativa Argentina</h3>
+                  <p className="text-sm text-muted-foreground">Integración completa de LCT, convenios y cargas sociales</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
