@@ -21,6 +21,12 @@ import AgentsPanel from "./pages/AgentsPanel";
 import AgentChat from "./pages/AgentChat";
 import TaskAssignment from "./pages/TaskAssignment";
 import WorkspaceSettings from "./pages/WorkspaceSettings";
+import ControlCenterV2 from "./pages/ControlCenterV2";
+import TaxesModule from "./pages/TaxesModule";
+import AccountingModule from "./pages/AccountingModule";
+import EconomyModule from "./pages/EconomyModule";
+import BillingModule from "./pages/BillingModule";
+import ClientsEmployeesModule from "./pages/ClientsEmployeesModule";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -45,8 +51,14 @@ function Router() {
               <Route path={"/payroll/upload"} component={PayrollUpload} />
               <Route path={"/payroll/monitoring"} component={PayrollMonitoring} />
               <Route path={"/payroll/history"} component={PayrollHistory} />
-              <Route path={"/payroll/audit"} component={PayrollAudit} />
-              <Route path={"/404"} component={NotFound} />
+              <Route path={"\\payroll/audit"} component={PayrollAudit} />
+              <Route path={"\\taxes"} component={TaxesModule} />
+              <Route path={"\\accounting"} component={AccountingModule} />
+              <Route path={"\\economy"} component={EconomyModule} />
+              <Route path={"\\billing"} component={BillingModule} />
+              <Route path={"\\clients-employees"} component={ClientsEmployeesModule} />
+              <Route path={"\\control-center-v2"} component={ControlCenterV2} />
+              <Route path={"\\404"} component={NotFound} />
               {/* Final fallback route */}
               <Route component={NotFound} />
             </Switch>

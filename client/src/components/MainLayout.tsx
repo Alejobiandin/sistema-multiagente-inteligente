@@ -14,6 +14,11 @@ import {
   Menu,
   X,
   Bell,
+  DollarSign,
+  BookOpen,
+  TrendingUp,
+  FileText,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -22,10 +27,16 @@ interface MainLayoutProps {
 }
 
 const navItems = [
+  { href: "/control-center-v2", label: "Centro de Control V2", icon: LayoutDashboard },
   { href: "/control-center", label: "Centro de Control", icon: LayoutDashboard },
   { href: "/agents", label: "Agentes", icon: Zap },
   { href: "/chat", label: "Diálogo", icon: MessageSquare },
   { href: "/tasks", label: "Tareas", icon: CheckCircle2 },
+  { href: "/taxes", label: "Impuestos", icon: DollarSign },
+  { href: "/accounting", label: "Contabilidad", icon: BookOpen },
+  { href: "/economy", label: "Economía", icon: TrendingUp },
+  { href: "/billing", label: "Facturación", icon: FileText },
+  { href: "/clients-employees", label: "Clientes y Empleados", icon: Users },
   { href: "/settings", label: "Configuración", icon: Settings },
 ];
 
