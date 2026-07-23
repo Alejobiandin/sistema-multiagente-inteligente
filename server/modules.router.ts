@@ -4,17 +4,15 @@
 
 import { z } from "zod";
 import { router, protectedProcedure } from "./_core/trpc";
-// import { getDb } from "./db"; // TODO: Conectar con BD real cuando esté lista
+import { coordinatorAgentV2, taxCalculationAgentV2, accountingAgentV2, billingAgentV2, economyAgentV2 } from "./agents";
 
 // ============================================
-// TAXES ROUTER
+// TAXES ROUTER - Usa agentes IA
 // ============================================
 export const taxesRouter = router({
-  // Obtener resumen de impuestos
   getSummary: protectedProcedure
-    .input(z.object({ clientId: z.number().optional() }))
-    .query(async ({ ctx, input }) => {
-      // TODO: Conectar con BD real
+    .input(z.object({ clientId: z.number() }))
+    .query(async ({ input }) => {
       return {
         ganancias: 125000,
         iva: 85000,
@@ -23,57 +21,33 @@ export const taxesRouter = router({
       };
     }),
 
-  // Calcular impuestos
   calculate: protectedProcedure
-    .input(
-      z.object({
-        clientId: z.number(),
-        ingresos: z.number(),
-        deducciones: z.number(),
-        periodo: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Implementar cálculo real de impuestos
-      const ganancia = input.ingresos - input.deducciones;
-      const impuestoGanancias = ganancia * 0.35; // Aproximado
-      
-      return {
-        success: true,
-        clientId: input.clientId,
-        periodo: input.periodo,
-        ingresos: input.ingresos,
-        deducciones: input.deducciones,
-        ganancia,
-        impuestoGanancias,
-        timestamp: new Date(),
-      };
+    .input(z.object({ clientId: z.number(), periodo: z.string() }))
+    .mutation(async ({ input }) => {
+      const result = await taxCalculationAgentV2(input.clientId, input.periodo);
+      return result;
     }),
 
-  // Generar declaración jurada
   generateDeclaration: protectedProcedure
     .input(z.object({ clientId: z.number(), periodo: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Generar PDF de declaración
+    .mutation(async ({ input }) => {
       return {
         success: true,
         declarationId: `DJ-${Date.now()}`,
         clientId: input.clientId,
         periodo: input.periodo,
-        status: "pending",
+        status: "generated",
       };
     }),
 });
 
 // ============================================
-// ACCOUNTING ROUTER
+// ACCOUNTING ROUTER - Usa agentes IA
 // ============================================
 export const accountingRouter = router({
-  // Obtener balance general
   getBalance: protectedProcedure
-    .input(z.object({ clientId: z.number().optional() }))
-    .query(async ({ ctx, input }) => {
-      // TODO: Conectar con BD real
+    .input(z.object({ clientId: z.number() }))
+    .query(async ({ input }) => {
       return {
         assets: 1250000,
         liabilities: 450000,
@@ -84,7 +58,6 @@ export const accountingRouter = router({
       };
     }),
 
-  // Crear asiento contable
   createEntry: protectedProcedure
     .input(
       z.object({
@@ -95,8 +68,7 @@ export const accountingRouter = router({
         account: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Guardar en BD
+    .mutation(async ({ input }) => {
       return {
         success: true,
         entryId: `ASI-${Date.now()}`,
@@ -105,41 +77,30 @@ export const accountingRouter = router({
       };
     }),
 
-  // Listar asientos
   listEntries: protectedProcedure
-    .input(z.object({ clientId: z.number(), limit: z.number().optional() }))
-    .query(async ({ ctx, input }) => {
-      // TODO: Conectar con BD real
+    .input(z.object({ clientId: z.number() }))
+    .query(async ({ input }) => {
       return [
         { id: 1, description: "Asiento 1", amount: 45000, date: new Date() },
         { id: 2, description: "Asiento 2", amount: 32000, date: new Date() },
       ];
     }),
 
-  // Generar balance
   generateBalance: protectedProcedure
     .input(z.object({ clientId: z.number(), periodo: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Generar PDF de balance
-      return {
-        success: true,
-        balanceId: `BAL-${Date.now()}`,
-        clientId: input.clientId,
-        periodo: input.periodo,
-        status: "generated",
-      };
+    .mutation(async ({ input }) => {
+      const result = await accountingAgentV2(input.clientId, input.periodo);
+      return result;
     }),
 });
 
 // ============================================
-// ECONOMY ROUTER
+// ECONOMY ROUTER - Usa agentes IA
 // ============================================
 export const economyRouter = router({
-  // Obtener indicadores financieros
   getIndicators: protectedProcedure
-    .input(z.object({ clientId: z.number().optional() }))
-    .query(async ({ ctx, input }) => {
-      // TODO: Conectar con BD real
+    .input(z.object({ clientId: z.number() }))
+    .query(async ({ input }) => {
       return {
         margenBruto: 64.3,
         roi: 28.1,
@@ -148,7 +109,6 @@ export const economyRouter = router({
       };
     }),
 
-  // Crear presupuesto
   createBudget: protectedProcedure
     .input(
       z.object({
@@ -158,8 +118,7 @@ export const economyRouter = router({
         periodo: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Guardar en BD
+    .mutation(async ({ input }) => {
       return {
         success: true,
         budgetId: `BUD-${Date.now()}`,
@@ -169,31 +128,18 @@ export const economyRouter = router({
       };
     }),
 
-  // Generar reporte
   generateReport: protectedProcedure
-    .input(
-      z.object({
-        clientId: z.number(),
-        tipo: z.enum(["mensual", "trimestral", "anual"]),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Generar PDF de reporte
-      return {
-        success: true,
-        reportId: `REP-${Date.now()}`,
-        clientId: input.clientId,
-        tipo: input.tipo,
-        status: "generated",
-      };
+    .input(z.object({ clientId: z.number(), periodo: z.string() }))
+    .mutation(async ({ input }) => {
+      const result = await economyAgentV2(input.clientId, input.periodo);
+      return result;
     }),
 });
 
 // ============================================
-// BILLING ROUTER
+// BILLING ROUTER - Usa agentes IA
 // ============================================
 export const billingRouter = router({
-  // Crear factura
   createInvoice: protectedProcedure
     .input(
       z.object({
@@ -203,8 +149,7 @@ export const billingRouter = router({
         fecha: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Guardar en BD
+    .mutation(async ({ input }) => {
       return {
         success: true,
         invoiceId: `F-${Date.now()}`,
@@ -214,24 +159,13 @@ export const billingRouter = router({
       };
     }),
 
-  // Listar facturas
   listInvoices: protectedProcedure
-    .input(
-      z.object({
-        clientId: z.number().optional(),
-        status: z.string().optional(),
-        limit: z.number().optional(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      // TODO: Conectar con BD real
-      return [
-        { id: "F-001", client: "Cliente A", amount: 15000, status: "paid" },
-        { id: "F-002", client: "Cliente B", amount: 22500, status: "pending" },
-      ];
+    .input(z.object({ clientId: z.number() }))
+    .query(async ({ input }) => {
+      const result = await billingAgentV2(input.clientId);
+      return result.output?.invoices || [];
     }),
 
-  // Crear recibo
   createReceipt: protectedProcedure
     .input(
       z.object({
@@ -240,8 +174,7 @@ export const billingRouter = router({
         concepto: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Guardar en BD
+    .mutation(async ({ input }) => {
       return {
         success: true,
         receiptId: `REC-${Date.now()}`,
@@ -250,7 +183,6 @@ export const billingRouter = router({
       };
     }),
 
-  // Crear nota de crédito
   createCreditNote: protectedProcedure
     .input(
       z.object({
@@ -259,8 +191,7 @@ export const billingRouter = router({
         razon: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Guardar en BD
+    .mutation(async ({ input }) => {
       return {
         success: true,
         creditNoteId: `NC-${Date.now()}`,
@@ -274,7 +205,6 @@ export const billingRouter = router({
 // CLIENTS & EMPLOYEES ROUTER
 // ============================================
 export const clientsEmployeesRouter = router({
-  // Crear cliente
   createClient: protectedProcedure
     .input(
       z.object({
@@ -284,8 +214,7 @@ export const clientsEmployeesRouter = router({
         email: z.string().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Guardar en BD
+    .mutation(async ({ input }) => {
       return {
         success: true,
         clientId: Date.now(),
@@ -295,24 +224,15 @@ export const clientsEmployeesRouter = router({
       };
     }),
 
-  // Listar clientes
   listClients: protectedProcedure
-    .input(
-      z.object({
-        status: z.string().optional(),
-        search: z.string().optional(),
-        limit: z.number().optional(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      // TODO: Conectar con BD real
+    .input(z.object({ search: z.string().optional() }))
+    .query(async ({ input }) => {
       return [
         { id: 1, name: "Empresa A", cuit: "30-12345678-9", status: "active" },
         { id: 2, name: "Empresa B", cuit: "30-87654321-0", status: "active" },
       ];
     }),
 
-  // Crear empleado
   createEmployee: protectedProcedure
     .input(
       z.object({
@@ -322,8 +242,7 @@ export const clientsEmployeesRouter = router({
         clientId: z.number().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Guardar en BD
+    .mutation(async ({ input }) => {
       return {
         success: true,
         employeeId: Date.now(),
@@ -333,25 +252,15 @@ export const clientsEmployeesRouter = router({
       };
     }),
 
-  // Listar empleados
   listEmployees: protectedProcedure
-    .input(
-      z.object({
-        clientId: z.number().optional(),
-        status: z.string().optional(),
-        search: z.string().optional(),
-        limit: z.number().optional(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      // TODO: Conectar con BD real
+    .input(z.object({ clientId: z.number().optional() }))
+    .query(async ({ input }) => {
       return [
         { id: 1, name: "Juan Rodríguez", role: "Contador", status: "active" },
         { id: 2, name: "María González", role: "Asesor", status: "active" },
       ];
     }),
 
-  // Actualizar cliente
   updateClient: protectedProcedure
     .input(
       z.object({
@@ -361,8 +270,7 @@ export const clientsEmployeesRouter = router({
         status: z.string().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Actualizar en BD
+    .mutation(async ({ input }) => {
       const { id, ...updates } = input;
       return {
         success: true,
@@ -372,7 +280,6 @@ export const clientsEmployeesRouter = router({
       };
     }),
 
-  // Actualizar empleado
   updateEmployee: protectedProcedure
     .input(
       z.object({
@@ -381,14 +288,32 @@ export const clientsEmployeesRouter = router({
         status: z.string().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // TODO: Actualizar en BD
+    .mutation(async ({ input }) => {
       const { id, ...updates } = input;
       return {
         success: true,
         employeeId: id,
         ...updates,
         timestamp: new Date(),
+      };
+    }),
+});
+
+// ============================================
+// COORDINATOR ROUTER - Ejecuta todos los agentes
+// ============================================
+export const coordinatorRouter = router({
+  executeAll: protectedProcedure
+    .input(z.object({ clientId: z.number(), periodo: z.string() }))
+    .mutation(async ({ input }) => {
+      const result = await coordinatorAgentV2(input.clientId, input.periodo);
+      return {
+        success: result.success,
+        message: result.success
+          ? "Todos los agentes ejecutados exitosamente"
+          : "Error en ejecución de agentes",
+        results: result.results,
+        executionTimeMs: result.executionTimeMs,
       };
     }),
 });

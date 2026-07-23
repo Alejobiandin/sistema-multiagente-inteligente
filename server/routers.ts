@@ -10,6 +10,7 @@ import {
   economyRouter,
   billingRouter,
   clientsEmployeesRouter,
+  coordinatorRouter,
 } from "./modules.router";
 
 export const appRouter = router({
@@ -31,6 +32,7 @@ export const appRouter = router({
   economy: economyRouter,
   billing: billingRouter,
   clients: clientsEmployeesRouter,
+  coordinator: coordinatorRouter,
 });
 
 export type AppRouter = typeof appRouter;

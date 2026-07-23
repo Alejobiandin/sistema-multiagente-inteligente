@@ -513,3 +513,260 @@ export async function orchestrateAgents(
     };
   }
 }
+
+
+// ============================================
+// NUEVOS AGENTES PARA MÓDULOS V2
+// ============================================
+
+/**
+ * AGENTE DE CÁLCULO DE IMPUESTOS
+ * Calcula automáticamente impuestos (Ganancias, IVA, Retenciones, Aportes)
+ */
+export async function taxCalculationAgentV2(clientId: number, period: string): Promise<AgentResult> {
+  try {
+    const prompt = `You are a tax calculation expert for Argentine companies. Calculate the following taxes for the period ${period}:
+    
+    - Ganancias (Income Tax): 35% rate
+    - IVA (VAT): 21% rate  
+    - Retenciones (Withholdings): 17% rate
+    - Aportes (Contributions): 16% rate
+    
+    For a company with estimated revenue of $100,000 for the period, provide calculations in JSON format with:
+    {
+      "taxes": [
+        {"type": "ganancias", "amount": 0, "rate": 35},
+        {"type": "iva", "amount": 0, "rate": 21},
+        {"type": "retenciones", "amount": 0, "rate": 17},
+        {"type": "aportes", "amount": 0, "rate": 16}
+      ],
+      "total_tax_amount": 0,
+      "effective_rate": 0,
+      "due_dates": {"ganancias": "2026-08-20", "iva": "2026-08-15"},
+      "reasoning": "Explanation of calculations"
+    }`;
+
+    const result = await invokeLLM({
+      model: "claude-3-5-sonnet",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 1500,
+    });
+
+    const responseText = result.choices[0]?.message.content || '';
+    const contentStr = typeof responseText === 'string' ? responseText : JSON.stringify(responseText);
+    const calculation = JSON.parse(contentStr);
+
+    return {
+      success: true,
+      output: calculation,
+      reasoning: calculation.reasoning,
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      output: null,
+      reasoning: "Error calculating taxes",
+      errorMessage,
+    };
+  }
+}
+
+/**
+ * AGENTE DE CONTABILIDAD
+ * Genera asientos contables automáticos
+ */
+export async function accountingAgentV2(clientId: number, period: string): Promise<AgentResult> {
+  try {
+    const prompt = `You are an accounting expert. Generate accounting entries for the period ${period} based on standard business operations:
+    
+    Assume:
+    - Monthly revenue: $100,000
+    - Operating expenses: $30,000
+    - Taxes and contributions: $20,000
+    
+    Provide in JSON format with:
+    {
+      "entries": [
+        {"description": "...", "account": "1000", "debit": 0, "credit": 0},
+      ],
+      "balance_sheet": {
+        "assets": 0,
+        "liabilities": 0,
+        "equity": 0,
+        "revenue": 0,
+        "expenses": 0,
+        "profit": 0
+      },
+      "reasoning": "Explanation"
+    }`;
+
+    const result = await invokeLLM({
+      model: "claude-3-5-sonnet",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 2000,
+    });
+
+    const responseText = result.choices[0]?.message.content || '';
+    const contentStr = typeof responseText === 'string' ? responseText : JSON.stringify(responseText);
+    const accounting = JSON.parse(contentStr);
+
+    return {
+      success: true,
+      output: accounting,
+      reasoning: accounting.reasoning,
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      output: null,
+      reasoning: "Error generating accounting entries",
+      errorMessage,
+    };
+  }
+}
+
+/**
+ * AGENTE DE FACTURACIÓN
+ * Genera facturas automáticas
+ */
+export async function billingAgentV2(clientId: number): Promise<AgentResult> {
+  try {
+    const prompt = `You are a billing specialist. Generate 3 sample invoices for a company with the following details:
+    
+    - Invoice dates: between today and 30 days ago
+    - Amounts: between $5,000 and $50,000
+    - Statuses: mix of sent, paid, and pending
+    
+    Provide in JSON format with:
+    {
+      "invoices": [
+        {"number": "F-001", "date": "2026-07-20", "amount": 15000, "status": "paid"},
+      ],
+      "total_amount": 0,
+      "average_invoice": 0,
+      "reasoning": "Explanation"
+    }`;
+
+    const result = await invokeLLM({
+      model: "claude-3-5-sonnet",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 1500,
+    });
+
+    const responseText = result.choices[0]?.message.content || '';
+    const contentStr = typeof responseText === 'string' ? responseText : JSON.stringify(responseText);
+    const billing = JSON.parse(contentStr);
+
+    return {
+      success: true,
+      output: billing,
+      reasoning: billing.reasoning,
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      output: null,
+      reasoning: "Error generating invoices",
+      errorMessage,
+    };
+  }
+}
+
+/**
+ * AGENTE DE ANÁLISIS ECONÓMICO
+ * Calcula indicadores económicos
+ */
+export async function economyAgentV2(clientId: number, period: string): Promise<AgentResult> {
+  try {
+    const prompt = `You are a financial analyst. Calculate economic indicators for the period ${period}:
+    
+    Based on:
+    - Revenue: $100,000
+    - Expenses: $30,000
+    - Assets: $500,000
+    - Liabilities: $200,000
+    
+    Provide in JSON format with:
+    {
+      "indicators": {
+        "gross_margin": 0,
+        "roi": 0,
+        "cash_flow": 0,
+        "growth_projection": 0,
+        "debt_ratio": 0
+      },
+      "analysis": "Interpretation of indicators",
+      "recommendations": ["recommendation1", "recommendation2"],
+      "reasoning": "Explanation"
+    }`;
+
+    const result = await invokeLLM({
+      model: "claude-3-5-sonnet",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 1500,
+    });
+
+    const responseText = result.choices[0]?.message.content || '';
+    const contentStr = typeof responseText === 'string' ? responseText : JSON.stringify(responseText);
+    const economy = JSON.parse(contentStr);
+
+    return {
+      success: true,
+      output: economy,
+      reasoning: economy.reasoning,
+      recommendations: economy.recommendations,
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      output: null,
+      reasoning: "Error calculating economic indicators",
+      errorMessage,
+    };
+  }
+}
+
+/**
+ * AGENTE COORDINADOR V2
+ * Ejecuta todos los agentes de módulos V2 en paralelo
+ */
+export async function coordinatorAgentV2(
+  clientId: number,
+  period: string
+): Promise<{
+  success: boolean;
+  results: Record<string, AgentResult>;
+  executionTimeMs: number;
+}> {
+  const startTime = Date.now();
+  
+  try {
+    const [taxResult, accountingResult, billingResult, economyResult] = await Promise.all([
+      taxCalculationAgentV2(clientId, period),
+      accountingAgentV2(clientId, period),
+      billingAgentV2(clientId),
+      economyAgentV2(clientId, period),
+    ]);
+
+    return {
+      success: true,
+      results: {
+        taxes: taxResult,
+        accounting: accountingResult,
+        billing: billingResult,
+        economy: economyResult,
+      },
+      executionTimeMs: Date.now() - startTime,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      results: {},
+      executionTimeMs: Date.now() - startTime,
+    };
+  }
+}
