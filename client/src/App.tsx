@@ -51,14 +51,14 @@ function Router() {
               <Route path={"/payroll/upload"} component={PayrollUpload} />
               <Route path={"/payroll/monitoring"} component={PayrollMonitoring} />
               <Route path={"/payroll/history"} component={PayrollHistory} />
-              <Route path={"\\payroll/audit"} component={PayrollAudit} />
-              <Route path={"\\taxes"} component={TaxesModule} />
-              <Route path={"\\accounting"} component={AccountingModule} />
-              <Route path={"\\economy"} component={EconomyModule} />
-              <Route path={"\\billing"} component={BillingModule} />
-              <Route path={"\\clients-employees"} component={ClientsEmployeesModule} />
-              <Route path={"\\control-center-v2"} component={ControlCenterV2} />
-              <Route path={"\\404"} component={NotFound} />
+              <Route path={"/payroll/audit"} component={PayrollAudit} />
+              <Route path={"/taxes"} component={TaxesModule} />
+              <Route path={"/accounting"} component={AccountingModule} />
+              <Route path={"/economy"} component={EconomyModule} />
+              <Route path={"/billing"} component={BillingModule} />
+              <Route path={"/clients-employees"} component={ClientsEmployeesModule} />
+              <Route path={"/control-center-v2"} component={ControlCenterV2} />
+              <Route path={"/404"} component={NotFound} />
               {/* Final fallback route */}
               <Route component={NotFound} />
             </Switch>
