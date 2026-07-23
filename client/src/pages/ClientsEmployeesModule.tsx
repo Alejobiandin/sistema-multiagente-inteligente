@@ -1,172 +1,150 @@
 /**
- * Módulo de Gestión de Clientes y Empleados
+ * Módulo de Clientes y Empleados - Gestión de Contactos
+ * Integrado con Agentes IA
  */
 
 import { useState } from "react";
-import { Users, Plus, Search, Edit, Trash2, Eye } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Users, Plus, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { trpc } from "@/lib/trpc";
 
 export default function ClientsEmployeesModule() {
-  const [activeTab, setActiveTab] = useState("clientes");
+  const [activeTab, setActiveTab] = useState("clients");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const clients = [
-    { id: 1, name: "Empresa A", cuit: "30-12345678-9", status: "active", contact: "Juan Pérez" },
-    { id: 2, name: "Empresa B", cuit: "30-87654321-0", status: "active", contact: "María García" },
-    { id: 3, name: "Empresa C", cuit: "30-11223344-5", status: "inactive", contact: "Carlos López" }
+    { id: 1, name: "Empresa ABC", email: "contacto@abc.com", phone: "+54 11 1234-5678", status: "active" },
+    { id: 2, name: "Negocio XYZ", email: "info@xyz.com", phone: "+54 11 8765-4321", status: "active" },
+    { id: 3, name: "Corporación 123", email: "ventas@corp123.com", phone: "+54 11 5555-6666", status: "inactive" },
   ];
 
   const employees = [
-    { id: 1, name: "Juan Rodríguez", role: "Contador", status: "active", email: "juan@empresa.com" },
-    { id: 2, name: "María González", role: "Asesor", status: "active", email: "maria@empresa.com" },
-    { id: 3, name: "Pedro Martínez", role: "Auditor", status: "inactive", email: "pedro@empresa.com" }
+    { id: 1, name: "Juan Pérez", role: "Contador", email: "juan@empresa.com", status: "active" },
+    { id: 2, name: "María García", role: "Analista", email: "maria@empresa.com", status: "active" },
+    { id: 3, name: "Carlos López", role: "Gerente", email: "carlos@empresa.com", status: "active" },
   ];
 
+  const filteredClients = clients.filter(c => 
+    c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredEmployees = employees.filter(e =>
+    e.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    e.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getStatusColor = (status: string) => {
+    return status === "active"
+      ? "bg-green-500/10 border-green-500/30 text-green-700 dark:text-green-400"
+      : "bg-gray-500/10 border-gray-500/30 text-gray-700 dark:text-gray-400";
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Gestión de Clientes y Empleados</h1>
-        <p className="text-slate-400">Administra clientes, empleados y datos de contacto</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary/5 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl -z-10" />
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-        <TabsList className="bg-slate-800 border-slate-700">
-          <TabsTrigger value="clientes">Clientes</TabsTrigger>
-          <TabsTrigger value="empleados">Empleados</TabsTrigger>
-          <TabsTrigger value="contactos">Contactos</TabsTrigger>
-        </TabsList>
-
-        {/* Clientes Tab */}
-        <TabsContent value="clientes" className="space-y-6">
-          <div className="flex gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-              <Input
-                placeholder="Buscar cliente..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-slate-800 border-slate-700 text-white"
-              />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-8 animate-fade-in-up">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-secondary to-accent">
+              <Users className="h-5 w-5 text-white" />
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-              <Plus className="w-4 h-4 mr-2" />
-              Nuevo Cliente
-            </Button>
+            <span className="text-sm font-semibold text-secondary">Gestión de Contactos</span>
           </div>
+          <h1 className="text-4xl font-bold text-foreground mb-2">Clientes y Empleados</h1>
+          <p className="text-lg text-muted-foreground">Gestiona clientes, empleados y contactos con IA</p>
+        </div>
 
-          <div className="space-y-3">
-            {clients.map((client) => (
-              <Card key={client.id} className="border-slate-700 bg-slate-800/50 backdrop-blur p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <p className="font-semibold text-white">{client.name}</p>
-                    <p className="text-sm text-slate-400">CUIT: {client.cuit}</p>
-                    <p className="text-sm text-slate-400">Contacto: {client.contact}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      client.status === "active"
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-red-500/20 text-red-400"
-                    }`}>
-                      {client.status === "active" ? "Activo" : "Inactivo"}
-                    </span>
-                    <Button size="sm" variant="outline" className="border-slate-600">
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" className="border-slate-600">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" className="border-slate-600">
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+          <TabsList className="bg-card border border-border">
+            <TabsTrigger value="clients">Clientes</TabsTrigger>
+            <TabsTrigger value="employees">Empleados</TabsTrigger>
+          </TabsList>
 
-        {/* Empleados Tab */}
-        <TabsContent value="empleados" className="space-y-6">
-          <div className="flex gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-              <Input
-                placeholder="Buscar empleado..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-slate-800 border-slate-700 text-white"
-              />
+          <TabsContent value="clients" className="space-y-6 animate-fade-in-up">
+            <div className="flex gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar clientes..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-card border-border"
+                />
+              </div>
+              <Button className="bg-gradient-to-r from-secondary to-accent hover:from-secondary/90 hover:to-accent/90 text-white h-10 font-semibold rounded-lg transition-all duration-300">
+                <Plus className="w-4 h-4 mr-2" />
+                Nuevo Cliente
+              </Button>
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-              <Plus className="w-4 h-4 mr-2" />
-              Nuevo Empleado
-            </Button>
-          </div>
 
-          <div className="space-y-3">
-            {employees.map((employee) => (
-              <Card key={employee.id} className="border-slate-700 bg-slate-800/50 backdrop-blur p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <p className="font-semibold text-white">{employee.name}</p>
-                    <p className="text-sm text-slate-400">Rol: {employee.role}</p>
-                    <p className="text-sm text-slate-400">Email: {employee.email}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      employee.status === "active"
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-red-500/20 text-red-400"
-                    }`}>
-                      {employee.status === "active" ? "Activo" : "Inactivo"}
-                    </span>
-                    <Button size="sm" variant="outline" className="border-slate-600">
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" className="border-slate-600">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" className="border-slate-600">
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* Contactos Tab */}
-        <TabsContent value="contactos" className="space-y-6">
-          <Card className="border-slate-700 bg-slate-800/50 backdrop-blur p-6">
-            <h3 className="text-lg font-bold text-white mb-4">Contactos Importantes</h3>
             <div className="space-y-3">
-              <div className="p-4 rounded-lg bg-slate-700/30">
-                <p className="font-semibold text-white">AFIP</p>
-                <p className="text-sm text-slate-400">Tel: 0800-999-2347</p>
-              </div>
-              <div className="p-4 rounded-lg bg-slate-700/30">
-                <p className="font-semibold text-white">Superintendencia de Seguros</p>
-                <p className="text-sm text-slate-400">Tel: 0800-666-8726</p>
-              </div>
-              <div className="p-4 rounded-lg bg-slate-700/30">
-                <p className="font-semibold text-white">ANSES</p>
-                <p className="text-sm text-slate-400">Tel: 130 (desde teléfono fijo)</p>
-              </div>
+              {filteredClients.map((client) => (
+                <div key={client.id} className="rounded-xl bg-card border border-border p-6 hover:border-secondary/50 transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-4 mb-2">
+                        <p className="font-bold text-foreground">{client.name}</p>
+                        <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(client.status)}`}>
+                          {client.status === "active" ? "Activo" : "Inactivo"}
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{client.email} • {client.phone}</p>
+                    </div>
+                    <Button variant="ghost" size="sm">
+                      Ver Detalles
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
-            <Button className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white">
-              Agregar Contacto
-            </Button>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          </TabsContent>
+
+          <TabsContent value="employees" className="space-y-6 animate-fade-in-up">
+            <div className="flex gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar empleados..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-card border-border"
+                />
+              </div>
+              <Button className="bg-gradient-to-r from-secondary to-primary hover:from-secondary/90 hover:to-primary/90 text-white h-10 font-semibold rounded-lg transition-all duration-300">
+                <Plus className="w-4 h-4 mr-2" />
+                Nuevo Empleado
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {filteredEmployees.map((employee) => (
+                <div key={employee.id} className="rounded-xl bg-card border border-border p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-4 mb-2">
+                        <p className="font-bold text-foreground">{employee.name}</p>
+                        <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(employee.status)}`}>
+                          {employee.status === "active" ? "Activo" : "Inactivo"}
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{employee.role} • {employee.email}</p>
+                    </div>
+                    <Button variant="ghost" size="sm">
+                      Ver Perfil
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
